@@ -17,7 +17,7 @@ type joinChecker struct {
 }
 
 var instance *joinChecker
-var logger = utils.GetModuleLogger("SunsonCheck")
+var logger = utils.GetModuleLogger("sic.joincheck")
 
 //StuInfo 学生信息
 type StuInfo struct {
