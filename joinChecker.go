@@ -13,10 +13,10 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-type memChecker struct {
+type joinChecker struct {
 }
 
-var instance *memChecker
+var instance *joinChecker
 var logger = utils.GetModuleLogger("SunsonCheck")
 
 //StuInfo 学生信息
@@ -35,27 +35,27 @@ type Member struct {
 }
 
 func init() {
-	instance = &memChecker{}
+	instance = &joinChecker{}
 	bot.RegisterModule(instance)
 }
 
-func (c *memChecker) MiraiGoModule() bot.ModuleInfo {
+func (c *joinChecker) MiraiGoModule() bot.ModuleInfo {
 	return bot.ModuleInfo{
-		ID:       "SunsonCheck",
+		ID:       "sic.joincheck",
 		Instance: instance,
 	}
 }
-func (c *memChecker) Init() {
+func (c *joinChecker) Init() {
 	logger.Info("SunsonCheck初始化完成")
 }
 
-func (c *memChecker) PostInit() {}
+func (c *joinChecker) PostInit() {}
 
-func (c *memChecker) Serve(b *bot.Bot) {
+func (c *joinChecker) Serve(b *bot.Bot) {
 	register(b)
 }
-func (c *memChecker) Start(b *bot.Bot) {}
-func (c *memChecker) Stop(b *bot.Bot, wg *sync.WaitGroup) {
+func (c *joinChecker) Start(b *bot.Bot) {}
+func (c *joinChecker) Stop(b *bot.Bot, wg *sync.WaitGroup) {
 	defer wg.Done()
 }
 
@@ -72,7 +72,7 @@ func CheckonJoin(qqClient *client.QQClient, event *client.UserJoinGroupRequest) 
 }
 
 func checkUin(uin int64) bool {
-	db, err := gorm.Open("mysql", config.GlobalConfig.GetString("sunsonCheck.DBSource")+"?charset=utf8&parseTime=True&loc=Local")
+	db, err := gorm.Open("mysql", config.GlobalConfig.GetString("sic.checker.DBSource")+"?charset=utf8&parseTime=True&loc=Local")
 	if err != nil {
 		return false
 	}
@@ -85,5 +85,5 @@ func checkUin(uin int64) bool {
 }
 
 func isTheGroup(uin int64) bool {
-	return uin == config.GlobalConfig.GetInt64("sunsonCheck.GroupUin")
+	return uin == config.GlobalConfig.GetInt64("sic.checker.GroupUin")
 }
